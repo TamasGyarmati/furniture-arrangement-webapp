@@ -15,9 +15,6 @@ This application arranges given furniture items within a room so that none of th
 - HTML, CSS, and JavaScript for the front-end
 - C# for backend logic
 
-## Project Type
-- Semester project
-
 ---
 
 ## How to Use
