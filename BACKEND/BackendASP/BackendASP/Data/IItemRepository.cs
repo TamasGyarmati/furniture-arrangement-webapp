@@ -8,4 +8,5 @@ public interface IItemRepository
     Task<IEnumerable<Item>> ReadAllAsync();
     Task<Item> ReadAsync(int id);
     Task DeleteAsync(int id);
+    Task DeleteAllAsync();
 }

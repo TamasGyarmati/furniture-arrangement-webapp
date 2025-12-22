@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendASP.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251222194332_InitMigration")]
+    [Migration("20251222203431_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />

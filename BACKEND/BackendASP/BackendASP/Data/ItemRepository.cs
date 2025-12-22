@@ -23,4 +23,10 @@ public class ItemRepository(AppDbContext context) : IItemRepository
         context.Items.Remove(toDelete);
         await context.SaveChangesAsync();
     }
+
+    public async Task DeleteAllAsync()
+    {
+        context.Items.RemoveRange(context.Items);
+        await context.SaveChangesAsync();
+    }
 }

@@ -19,4 +19,7 @@ public class ItemController(IItemRepository repo) : ControllerBase
 
     [HttpDelete("{id}")]
     public async Task DeleteItem(int id) => await repo.DeleteAsync(id);
+
+    [HttpDelete]
+    public async Task DeleteAll() => await repo.DeleteAllAsync();
 }

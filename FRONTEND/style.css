@@ -310,12 +310,13 @@ p {
 
 .item {
     position: absolute;
+    box-sizing: border-box; 
     color: white;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid var(--table-border);
+    border: 1px solid black;
     opacity: 0;
     transition: opacity 0.5s ease-out;
 }

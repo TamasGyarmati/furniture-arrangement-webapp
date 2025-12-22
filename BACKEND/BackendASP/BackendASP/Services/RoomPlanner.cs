@@ -37,7 +37,7 @@ public class RoomPlanner
         return true;
     }
 
-    public Coordinates TryPlaceFurniture(Item item)
+    public Coordinates? TryPlaceFurniture(Item item)
     {
         for (int i = 0; i <= Height - item.Height; i++)
         {
@@ -49,10 +49,10 @@ public class RoomPlanner
                     {
                         for (int y = 0; y < item.Width; y++)
                         {
-                            Grid[i + x, j + y] = item.Name.Length > 1 ? item.Name.Substring(0, 1) : item.Name;
+                            Grid[i + x, j + y] = item.Name.Length > 1 ? item.Name[..1] : item.Name;
                         }
                     }
-                    return new Coordinates(j, i);
+                    return new Coordinates{ X = j, Y = i };
                 }
             }
         }

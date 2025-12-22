@@ -343,7 +343,9 @@ function renderItemsInRoom(coords) {
             renderedSomething = true; // Sikeres renderelés
         } else {
             renderedSomething = false; // Sikertelen renderelés
-            AlertWrite(lightAlert, "<strong>Több elemet már nem lehet berakni!</strong>");
+            AlertWrite(lightAlert, isHU 
+                ? "<strong>Több elemet már nem lehet berakni!</strong>"
+                : "<strong>Can't put more items in the room!</strong>");
             removeLastItem(); // Azért kell törölni, mert ilyenkor már bekerült a tömbbe és az adatbázisba!
 
             setTimeout(() => {
