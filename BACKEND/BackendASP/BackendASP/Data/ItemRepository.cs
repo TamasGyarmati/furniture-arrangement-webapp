@@ -1,50 +1,26 @@
 using BackendASP.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendASP.Data;
 
-public class ItemRepository : IRepositoryPLUS<Item>
+public class ItemRepository(AppDbContext context) : IItemRepository
 {
-    AppDbContext context;
-    public ItemRepository(AppDbContext context)
+    public async Task CreateAsync(Item item)
     {
-        this.context = context;
+        await context.Items.AddAsync(item);
+        await context.SaveChangesAsync();
     }
-    public void Create(Item item)
+    
+    public async Task<IEnumerable<Item>> ReadAllAsync() => await context.Items.ToListAsync();
+    
+    public async Task<Item> ReadAsync(int id) => await context.Items.FirstOrDefaultAsync(x => x.Id == id)
+                                                 ?? throw new Exception("Not found");
+
+    public async Task DeleteAsync(int id)
     {
-        this.context.Items.Add(item);
-        context.SaveChanges();
-    }
-    public IEnumerable<Item> Read()
-    {
-        return this.context.Items;
-    }
-    public Item? Read(int id)
-    {
-        return this.context.Items.FirstOrDefault(x => x.Id == id);
-    }
-    public void Update(Item item)
-    {
-        Item? toUpdate = this.Read(item.Id);
+        var toDelete = await ReadAsync(id);
         
-        toUpdate.Name = item.Name;
-        toUpdate.Width = item.Width;
-        toUpdate.Height = item.Height;
-
-        context.SaveChanges();
-    }
-
-    public void Delete(int id)
-    {
-        Item? toDelete = this.Read(id);
-        this.context.Items.Remove(toDelete);
-        
-        context.SaveChanges();
-    }
-
-    public void DeleteAll()
-    {
-        this.context.Items.RemoveRange(this.context.Items);
-
-        context.SaveChanges();
+        context.Items.Remove(toDelete);
+        await context.SaveChangesAsync();
     }
 }

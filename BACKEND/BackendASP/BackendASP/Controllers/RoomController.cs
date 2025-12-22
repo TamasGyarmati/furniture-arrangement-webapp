@@ -6,35 +6,14 @@ namespace BackendASP.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class RoomController : ControllerBase
+public class RoomController(IRoomRepository repo) : ControllerBase
 {
-    IRepositoryCRUD<Room> repo;
-    public RoomController(IRepositoryCRUD<Room> repo)
-    {
-        this.repo = repo;
-    }
-
     [HttpGet("{id}")]
-    public Room? GetRoom(int id)
-    {
-        return this.repo.Read(id);
-    }
-
-    [HttpPost]
-    public void CreateRoom([FromBody] Room room)
-    {
-        this.repo.Create(room);
-    }
+    public async Task<Room> GetRoom(int id) => await repo.ReadAsync(id);
 
     [HttpPut]
-    public void EditRoom([FromBody] Room room)
-    {
-        this.repo.Update(room);
-    }
+    public async Task EditRoom(Room room) => await repo.UpdateAsync(room);
 
     [HttpDelete("{id}")]
-    public void DeleteRoom(int id)
-    {
-        this.repo.Delete(id);
-    }
+    public async Task DeleteRoom(int id) => await repo.DeleteAsync(id);
 }

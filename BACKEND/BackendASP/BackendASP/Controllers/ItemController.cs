@@ -6,47 +6,17 @@ namespace BackendASP.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ItemController : ControllerBase
+public class ItemController(IItemRepository repo) : ControllerBase
 {
-    IRepositoryPLUS<Item> repo;
-    public ItemController(IRepositoryPLUS<Item> repo)
-    {
-        this.repo = repo;
-    }
-
     [HttpGet]
-    public IEnumerable<Item> GetItems()
-    {
-        return this.repo.Read();
-    }
-
+    public async Task<IEnumerable<Item>> GetItems() => await repo.ReadAllAsync();
+    
     [HttpGet("{id}")]
-    public Item? GetItem(int id)
-    {
-        return this.repo.Read(id);
-    }
+    public async Task<Item> GetItem(int id) => await repo.ReadAsync(id);
 
     [HttpPost]
-    public void CreateItem([FromBody] Item item)
-    {
-        this.repo.Create(item);
-    }
-
-    [HttpPut]
-    public void EditItem([FromBody] Item item)
-    {
-        this.repo.Update(item);
-    }
+    public async Task CreateItem(Item item) => await repo.CreateAsync(item);
 
     [HttpDelete("{id}")]
-    public void DeleteItem(int id)
-    {
-        this.repo.Delete(id);
-    }
-
-    [HttpDelete]
-    public void DeleteAllItems()
-    {
-        this.repo.DeleteAll();
-    }
+    public async Task DeleteItem(int id) => await repo.DeleteAsync(id);
 }

@@ -1,54 +1,28 @@
 using BackendASP.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendASP.Data;
 
-public class RoomRepository : IRepositoryCRUD<Room>
+public class RoomRepository(AppDbContext context) : IRoomRepository
 {
-    AppDbContext context;
-    public RoomRepository(AppDbContext context)
-    {
-        this.context = context;
-    }
-    public void Create(Room room)
-    {
-        this.context.Rooms.Add(room);
-        context.SaveChanges();
-    }
+    public async Task<Room> ReadAsync(int id) => await context.Rooms.FirstOrDefaultAsync(x => x.Id == id)
+        ?? throw new Exception("Not found");
 
-    // Itt ez lehetne ID nélkül is hiszen csak 1db van
-    public Room Read(int id)
+    public async Task UpdateAsync(Room room)
     {
-        return this.context.Rooms.FirstOrDefault(x => x.Id == id);
-    }
-
-    public IEnumerable<Item> Read()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Update(Room room)
-    {
-        Room toUpdate = this.Read(room.Id);
+        var toUpdate = await ReadAsync(room.Id);
         
         toUpdate.Height = room.Height;
         toUpdate.Width = room.Width;
 
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async Task DeleteAsync(int id)
     {
-        Room toDelete = this.Read(id);
-        this.context.Rooms.Remove(toDelete);
+        var toDelete = await ReadAsync(id);
+        context.Rooms.Remove(toDelete);
 
-        context.SaveChanges();
-    }
-
-    public void DeleteAll()
-    {
-        Room toDelete = this.Read(1);
-        this.context.Rooms.Remove(toDelete);
-
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

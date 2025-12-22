@@ -3,21 +3,21 @@ using BackendASP.Models;
 namespace BackendASP.Services;
 public class RoomPlanner
 {
-    int height;
-    int width;
-    string[,] grid;
+    int Height { get; }
+    int Width { get; }
+    string[,] Grid { get; }
 
     public RoomPlanner(int height, int width)
     {
-        this.height = height;
-        this.width = width;
+        Height = height;
+        Width = width;
+        Grid = new string[height, width];
         
-        grid = new string[height, width];
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                grid[i, j] = ".";
+                Grid[i, j] = ".";
             }
         }
     }
@@ -28,7 +28,7 @@ public class RoomPlanner
         {
             for (int j = 0; j < item.Width; j++)
             {
-                if (startX + i >= height || startY + j >= width || grid[startX + i, startY + j] != ".")
+                if (startX + i >= Height || startY + j >= Width || Grid[startX + i, startY + j] != ".")
                 {
                     return false;
                 }
@@ -37,26 +37,25 @@ public class RoomPlanner
         return true;
     }
 
-    public Coordinates TryPlaceFurniture(Item item)
+    public Coordinates? TryPlaceFurniture(Item item)
     {
-        for (int i = 0; i <= height - item.Height; i++)
+        for (int i = 0; i <= Height - item.Height; i++)
         {
-            for (int j = 0; j <= width - item.Width; j++)
+            for (int j = 0; j <= Width - item.Width; j++)
             {
                 if (CanPlaceFurniture(i, j, item))
                 {
-                    // Elhelyezzük az első megfelelő helyen
                     for (int x = 0; x < item.Height; x++)
                     {
                         for (int y = 0; y < item.Width; y++)
                         {
-                            grid[i + x, j + y] = item.Name.Length > 1 ? item.Name.Substring(0, 1) : item.Name;
+                            Grid[i + x, j + y] = item.Name.Length > 1 ? item.Name[..1] : item.Name;
                         }
                     }
-                    return new Coordinates(j, i); // Visszaadjuk az elhelyezés kezdeti koordinátáját
+                    return new Coordinates(j, i);
                 }
             }
         }
-        return null; // JS gets 'undefined' 
+        return null;
     }
 }

@@ -3,30 +3,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackendASP.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Item> Items { get; set; }
     public DbSet<Room> Rooms { get; set; }
-    public AppDbContext()
-    {
-        Database.EnsureCreated();
-    }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        string connString = "Server=localhost,1433;Database=FurnitureArrangementDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True";
-        optionsBuilder.UseSqlServer(connString);
-        base.OnConfiguring(optionsBuilder);
-    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // PUT request miatt kell importolni data-t
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<Room>().HasData(
-            new Room()
+            new Room
             {
                 Id = 1,
                 Height = 0,
                 Width = 0,
             });
-        base.OnModelCreating(modelBuilder);
     }
 }

@@ -6,19 +6,9 @@ namespace BackendASP.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RoomPlannerController : ControllerBase
+public class RoomPlannerController(RoomPlannerService roomPlannerService) : ControllerBase
 {
-    IRoomPlannerService roomPlannerService;
-
-    public RoomPlannerController(IRoomPlannerService roomPlannerService)
-    {
-        this.roomPlannerService = roomPlannerService;
-    }
-
     [HttpGet("generate")]
-    public List<Coordinates> GenerateRoomPlan()
-    {
-        var coordinates = roomPlannerService.GeneratePlan(1);
-        return coordinates;
-    }
+    public async Task<List<Coordinates>> GenerateRoomPlanAsync()
+        => await roomPlannerService.GeneratePlanAsync(1);
 }

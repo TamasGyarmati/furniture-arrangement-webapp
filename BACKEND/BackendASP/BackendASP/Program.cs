@@ -1,14 +1,17 @@
 using BackendASP.Data;
-using BackendASP.Models;
 using BackendASP.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AppDbContext>();
-builder.Services.AddTransient<IRepositoryPLUS<Item>, ItemRepository>();
-builder.Services.AddTransient<IRepositoryCRUD<Room>, RoomRepository>();
-builder.Services.AddTransient<IRoomPlannerService, RoomPlannerService>();
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration["ConnectionString:RoomDb"]);
+});
+builder.Services.AddTransient<IItemRepository, ItemRepository>();
+builder.Services.AddTransient<IRoomRepository, RoomRepository>();
+builder.Services.AddTransient<RoomPlannerService>();
 
 // Swagger
 builder.Services.AddSwaggerGen();
