@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="/FRONTEND/pictures/favicon/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <title>Szobaelrendező</title>
+    <title>Room Planner</title>
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -23,19 +23,19 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto d-flex flex-column align-items-end d-lg-flex flex-lg-row gap-5">
               <li class="nav-item">          
-                <a class="nav-link" href="#bevezeto">Bevezető</a>
+                <a class="nav-link" href="#introduction">Introduction</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#mukodese">Működése</a>
+                <a class="nav-link" href="#how-it-works">How it works</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#szobarendezoNav">Szobaelrendező</a>
+                <a class="nav-link" href="#room-planner-nav">Room Planner</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#elerhetoseg">Elérhetőség</a>
+                <a class="nav-link" href="#contact">Contact</a>
               </li>
               <li class="nav-item">
-                <a id="enLink" href="#index-en.html" class="nav-link">🇬🇧</a>                
+                <a id="huLink" href="index.html" class="nav-link">🇭🇺</a>                
               </li>
               <li class="nav-item">
                 <button id="visionBtn" type="button" class="btn btn-sm btn-outline-secondary">🌑</button>            
@@ -47,36 +47,36 @@
     <div class="parent" id="parentgrid">
         <div class="div1 block">
             <img src="/FRONTEND/pictures/plans.png" alt="">
-            <header><h1>Szobaelrendező</h1></header>
+            <header><h1>Room Planner</h1></header>
         </div>
         <div class="div2 block">
-            <p id="bevezeto">
-                Üdvözlünk a szoba berendezési terv generálójában! Ez az eszköz segít vizuálisan megtervezni és elrendezni a bútorokat a szobádban, figyelembe véve azok méreteit és a rendelkezésre álló teret.
+            <p id="introduction">
+                Welcome to the room layout plan generator! This tool helps you visually design and arrange furniture in your room, taking into account their dimensions and the available space.
             </p>
         </div>
         <div class="div3 block">
-            <h2 id="mukodese">
-                Hogyan működik?
+            <h2 id="how-it-works">
+                How does it work?
             </h2>
             <ul>
-                <li>Adja meg a szoba méreteit - A szélességet és hosszúságot centiméterben (legfeljebb egy tizedesjegy pontossággal)</li>
-                <li>Adja meg a bútorok listáját - Minden bútordarabhoz adja meg a nevét, szélességét és hosszúságát centiméterben</li>
-                <li>Automatikus elrendezés - Az algoritmus elhelyezi a bútorokat a szobában úgy, hogy ne fedjék egymást</li>
-                <li>Táblázatos megjelenítés - A szoba egy négyzetes formában jelenik meg, ahol minden kis négyzet véletlenszerű színnel rendelkezik és a bútor nevét hordozza.</li>
+                <li>Enter the dimensions of the room – width and length in centimeters (up to one decimal point)</li>
+                <li>Enter the list of furniture – provide the name, width, and length for each piece of furniture</li>
+                <li>Automatic placement – the algorithm positions the furniture in the room so that they do not overlap</li>
+                <li>Table view – the room is displayed in a square grid, where each cell has a random color and shows the furniture name.</li>
             </ul>
         </div>
         <div class="div4 block">
             <p>
-                Próbálja ki most, és tervezze meg álmai szobáját egyszerűen és gyorsan!
+                Try it now and design your dream room quickly and easily!
             </p>
             <div id="danger-alert" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="szoba-merete-div" id="szobarendezoNav">
-                <label for="szoba-merete"><p id="szoba-size-p-tag">Szoba mérete:</p></label>
-                <input type="text" id="szoba-merete-1" placeholder="Szélesség">
-                <input type="text" id="szoba-merete-2" placeholder="Hosszúság">
-                <button type="button" id="save-btn" class="btn btn-success">Mentés</button>
+            <div class="szoba-merete-div" id="room-planner-nav">
+                <label for="room-size"><p id="szoba-size-p-tag">Room size:</p></label>
+                <input type="text" id="szoba-merete-1" placeholder="Width">
+                <input type="text" id="szoba-merete-2" placeholder="Length">
+                <button type="button" id="save-btn" class="btn btn-success">Save</button>
             </div>
             <div id="warning-alert" class="alert alert-warning alert-dismissible fade show d-none" role="alert">
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -84,16 +84,16 @@
             <form id="myForm">
               <table class="table" id="itemsTable">
                   <tr>
-                      <th>Tárgy neve</th>
-                      <th>Tárgy mérete</th>
-                      <th class="hozzaadas">Hozzáadás / Törlés</th>
+                      <th>Item Name</th>
+                      <th>Item Size</th>
+                      <th class="hozzaadas">Add / Remove</th>
                   </tr>
                   <tr>
                       <td>
                           <div class="input-group mb-3">                
                               <div class="form-floating">
                                 <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Username">
-                                <label for="floatingInputGroup1">pl. Ágy</label>
+                                <label for="floatingInputGroup1">e.g. Bed</label>
                               </div>
                           </div>
                       </td>
@@ -101,18 +101,18 @@
                           <div class="input-group mb-3 div-szelesseg">                
                               <div class="form-floating">
                                 <input type="text" class="form-control" id="floatingInputGroup2" placeholder="Username">
-                                <label for="floatingInputGroup2">Szélesség</label>
+                                <label for="floatingInputGroup2">Width</label>
                               </div>
                           </div>
                           <div class="input-group mb-3 div-magassag">                
                             <div class="form-floating">
                               <input type="text" class="form-control" id="floatingInputGroup3" placeholder="Username">
-                              <label for="floatingInputGroup3">Hosszúság</label>
+                              <label for="floatingInputGroup3">Length</label>
                             </div>
                         </div>
                       </td>
                       <td>
-                          <button type="submit" class="btn btn-outline-warning" id="add-btn">Hozzáad</button>
+                          <button type="submit" class="btn btn-outline-warning" id="add-btn">Add</button>
                       </td>
                   </tr>
               </table>
@@ -120,13 +120,13 @@
             <div id="light-alert" class="alert alert-info alert-dismissible fade show d-none" role="alert">
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>  
-            <button type="button" class="btn btn-primary btn-lg" id="generateBtn">Generálás</button>            
+            <button type="button" class="btn btn-primary btn-lg" id="generateBtn">Generate</button>            
         </div>
         <div class="div5" id="room">
         </div>
     </div>
     <hr id="bottomhr">
-    <div class="logos" id="elerhetoseg">
+    <div class="logos" id="contact">
         <a href="https://github.com/TamasGyarmati" target="_blank"><img src="/FRONTEND/pictures/githublogo.png" alt="github-link"></a>
         <a href="https://www.linkedin.com/in/tam%C3%A1s-gyarmati-ba5879328/" target="_blank"><img src="/FRONTEND/pictures/linkedinfinal.png" alt="linkedin-link"></a>
         <a href="mailto:tamasgy56@gmail.com" target="_blank"><img src="/FRONTEND/pictures/mail.webp" alt="mail-link"></a>
@@ -136,4 +136,4 @@
     </footer>
 <script src="main.js"></script>
 </body>
-</html>     
+</html>

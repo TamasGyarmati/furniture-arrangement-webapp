@@ -16,6 +16,10 @@ let roomElement = document.getElementById("room");
 let lightAlert = document.getElementById("light-alert");
 let dangerAlert = document.getElementById("danger-alert");
 let warningAlert = document.getElementById("warning-alert");
+let enLink = document.getElementById("enLink");
+let huLink = document.getElementById("huLink");
+let visionBtn = document.getElementById("visionBtn");
+const isHU = !document.getElementById("huLink");
 
 // Szoba méretének beállítása és UI frissítés
 let roomData = { width: null, height: null, area: null};
@@ -62,6 +66,11 @@ displayRoom();
 // Alerteket kiíró fv.
 function AlertWrite(x, y) {
     x.innerHTML = y;
+    if (document.body.classList.contains("dark")){
+        x.classList.add("white-text-color");
+    } else {
+        x.classList.remove("white-text-color");
+    }
     x.classList.remove("d-none");
     setTimeout(() => {
             x.classList.add("d-none");
@@ -81,19 +90,27 @@ saveBtn.addEventListener("click", function() {
 
     // Hibaüzenetek
     if (newRoomWidth > 1000 || newRoomHeight > 1000) {
-        AlertWrite(dangerAlert, "<strong>Maximum szoba méret: 1000x1000!</strong>");
+        AlertWrite(dangerAlert, isHU 
+            ? "<strong>Maximum szoba méret: 1000x1000!</strong>" 
+            : "<strong>Maximum room size: 1000x1000!</strong>");
         return;
     }
     if (!newRoomWidth || !newRoomHeight || isNaN(newRoomWidth) || isNaN(newRoomHeight)) {
-        AlertWrite(dangerAlert, "<strong>Adj meg érvényes szobaméretet!</strong>");
+        AlertWrite(dangerAlert, isHU
+            ? "<strong>Adj meg érvényes szobaméretet!</strong>"
+            : "<strong>Input should be a valid room size!</strong>");
         return;
     }
     if (sumArea > newRoomArea) {
-        AlertWrite(dangerAlert, "<strong>A hozzáadott tárgyak mérete nagyobb mint az új szoba mérete!</strong>");
+        AlertWrite(dangerAlert, isHU 
+            ? "<strong>A hozzáadott tárgyak mérete nagyobb mint az új szoba mérete!</strong>"
+            : "<strong>The already added items amount are greater than the new room size!</strong>");
         return;
     }
     if (invalidItem) {
-        AlertWrite(dangerAlert, "<strong>A szoba szélessége/magassága kevesebb mint egy adott tárgyé!</strong>");
+        AlertWrite(dangerAlert, isHU 
+            ? "<strong>A szoba szélessége/magassága kevesebb mint egy adott tárgyé!</strong>"
+            : "<strong>The room width/height is smaller than an existing item width/height!</strong>");
         return;
     }
 
@@ -118,7 +135,9 @@ saveBtn.addEventListener("click", function() {
     roomData.area = newRoomArea;
 
     // Szoba méret kiírása
-    roomSizePtag.textContent = "Szoba mérete: " + roomData.width + "x" + roomData.height + "cm" + " (" + roomData.area + "m²)" ;
+    roomSizePtag.textContent = isHU 
+    ? "Szoba mérete: " + roomData.width + "x" + roomData.height + "cm" + " (" + roomData.area + "m²)"
+    : "Room size: " + roomData.width + "x" + roomData.height + "cm" + " (" + roomData.area + "m²)";
 
     // Input mezők nullázása (ez miatt kellett a 'roomData')
     roomWidthInput.value = "";
@@ -137,15 +156,21 @@ addBtn.addEventListener("click", function() {
 
     // Hibaüzenetek
     if (roomData.area == null) {
-        AlertWrite(warningAlert, "<strong>Először a szoba méretét határozd meg!</strong>");
+        AlertWrite(warningAlert, isHU 
+            ? "<strong>Először a szoba méretét határozd meg!</strong>"
+            : "<strong>At first you need to declare the room size!</strong>");
         return;
     }
     if (!itemName || isNaN(itemWidth) || isNaN(itemHeight) || itemWidth <= 0 || itemHeight <= 0) {
-        AlertWrite(warningAlert, "<strong>Adj meg érvényes nevet és méretet!</strong>");
+        AlertWrite(warningAlert, isHU
+            ? "<strong>Adj meg érvényes nevet és méretet!</strong>"
+            : "<strong>Input a valid name and size!</strong>");
         return;
     }
     if (itemWidth > newRoomWidth || itemHeight > newRoomHeight || itemArea > roomData.area) {
-        AlertWrite(warningAlert, "<strong>A tárgy biztosan nem fér bele a szobába!</strong>");
+        AlertWrite(warningAlert, isHU 
+            ? "<strong>A tárgy biztosan nem fér bele a szobába!</strong>"
+            : "<strong>This item will definitely won't fit!</strong>");
         return;
     }
 
@@ -157,7 +182,9 @@ addBtn.addEventListener("click", function() {
 
     if (sumArea > roomData.area){
         items.pop({ itemName, itemArea, itemWidth, itemHeight });
-        AlertWrite(warningAlert, "<strong>Az össznégyzet méter-t meghaladja!</strong>");
+        AlertWrite(warningAlert, isHU 
+            ? "<strong>Az össznégyzet méter-t meghaladja!</strong>"
+            : "<strong>It exceeds the total square feet!</strong>");
         return;
     }
 
@@ -188,7 +215,7 @@ addBtn.addEventListener("click", function() {
     // Törlés gomb létrehozása
     const deleteCell = row.insertCell(2);
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Törlés";
+    deleteBtn.textContent = isHU ? "Törlés" : "Delete";
     deleteBtn.classList.add("btn", "btn-danger");
     deleteBtn.addEventListener("click", async function() {
         const itemNameToDelete = row.cells[0].textContent;
@@ -220,11 +247,15 @@ addBtn.addEventListener("click", function() {
                     
                     displayItems();
                 } else {
-                    AlertWrite(warningAlert, "<strong>Nem található az elem azonosítója!</strong>");
+                    AlertWrite(warningAlert, isHU
+                        ? "<strong>Nem található az elem azonosítója!</strong>"
+                        : "<strong>Can't find the ID of the item!</strong>");
                 }
             } catch (error) {
                 console.error("Hiba történt:", error);
-                AlertWrite(warningAlert, "<strong>Hiba történt a törlés során!</strong>");
+                AlertWrite(warningAlert, isHU 
+                    ? "<strong>Hiba történt a törlés során!</strong>"
+                    : "<strong>Something went wrong during deletion!</strong>");
             }
         }
     });
@@ -242,16 +273,16 @@ function fetchCoordinates() {
     return fetch("http://localhost:5090/api/RoomPlanner/generate")
         .then(response => {
             if (!response.ok) {
-                throw new Error("Hálózati hiba vagy nincs szoba adat!");
+                throw new Error("Network error, or no data!");
             }
             return response.json();
         })
         .then(data => {
-            console.log("Elhelyezett tárgyak koordinátái: ", data);
+            console.log("Placed items coordinates: ", data);
             return data;
         })
         .catch(error => {
-            console.error("Hiba történt: ", error);
+            console.error("Something went wrong: ", error);
         });
 }
 
@@ -335,7 +366,9 @@ async function removeLastItem() {
 
     // Ellenőrzés, hogy van-e egyáltalán sor a táblázatban
     if (table.rows.length === 0) {
-        AlertWrite(lightAlert, "<strong>Nincs kitörölhető elem a táblázatban!</strong>");
+        AlertWrite(lightAlert, isHU 
+            ? "<strong>Nincs kitörölhető elem a táblázatban!</strong>"
+            : "<strong>There's no item in the table to be deleted!</strong>");
         return;
     }
 
@@ -347,7 +380,9 @@ async function removeLastItem() {
     const lastItem = items.pop();
 
     if (!lastItem) {
-        AlertWrite(lightAlert, "<strong>Nem található törlendő elem a memóriában!</strong>");
+        AlertWrite(lightAlert, isHU 
+            ? "<strong>Nem található törlendő elem a memóriában!</strong>"
+            : "<strong>There's no item in the memory to be deleted!</strong>");
         return;
     }
 
@@ -367,7 +402,7 @@ async function removeLastItem() {
             }
         }
     } catch (error) {
-        console.error("Hiba történt az automatikus törlés során: ", error);
+        console.error("Something went wrong when deleting: ", error);
     }
     displayItems();
 }
@@ -380,6 +415,56 @@ function RandomColor() {
     let rgb = "rgb("+ red +","+ green +","+ blue +")";
     return rgb;
 }
+
+if (enLink) {
+    enLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.setItem("scrollPosition", window.scrollY);
+        window.location.href = "index-en.html";
+    });
+}
+
+if (huLink) {
+    huLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.setItem("scrollPosition", window.scrollY);
+        window.location.href = "index.html";
+    });
+}
+
+const currentTheme = localStorage.getItem("theme");
+if (currentTheme === "dark") {
+    document.body.classList.add("dark");
+    if (visionBtn) visionBtn.textContent = "☀️";
+}
+
+if (visionBtn) {
+    visionBtn.addEventListener("click", function() {
+        document.body.classList.toggle("dark");
+        
+        let theme = "light";
+        if (document.body.classList.contains("dark")) {
+            theme = "dark";
+            this.textContent = "☀️";
+        } else {
+            this.textContent = "🌑";
+        }    
+        localStorage.setItem("theme", theme);
+    });
+}
+
+window.addEventListener("load", () => {
+    const savedScrollPosition = localStorage.getItem("scrollPosition");
+    
+    if (savedScrollPosition) {
+        window.scrollTo({
+            top: parseInt(savedScrollPosition),
+            behavior: "instant"
+        });
+        
+        localStorage.removeItem("scrollPosition");
+    }
+});
 
 // Form újratöltés megakadályozása
 document.getElementById("myForm").addEventListener("submit", function(event) {
