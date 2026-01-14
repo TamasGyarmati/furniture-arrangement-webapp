@@ -11,16 +11,29 @@ This application arranges given furniture items within a room so that none of th
 - A generated room layout plan showing the furniture arrangement in a grid format
 
 ## Technologies Used
-- ASP.NET Core REST API
-- HTML, CSS, and JavaScript for the front-end
-- C# for backend logic
+- C#, ASP.NET Core
+- HTML, CSS, and JavaScript
 
 ---
 
 ## How to Use
-1. Provide the room dimensions and furniture list via the front-end interface.
-2. The app computes a furniture arrangement without overlaps.
-3. View the generated layout in the browser, with merged and colored cells representing each furniture piece.
+
+### Backend (ASP.NET Core API)
+
+- cd BACKEND/BackendASP/BackendASP
+- dotnet run
+
+The backend runs on port 5090  
+The port is configured in Properties/launchSettings.json  
+Update the connection string in appsettings.json to match your database
+
+### Frontend (HTML / CSS / JavaScript)
+
+- cd FRONTEND
+- python3 -m http.server 5500 or just open it in Live Server (VS Code)
+
+Open in browser:  
+http://localhost:5500
 
 ---
 
