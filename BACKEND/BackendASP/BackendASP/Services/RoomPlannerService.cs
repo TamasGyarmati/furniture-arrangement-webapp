@@ -11,6 +11,17 @@ public class RoomPlannerService(IRoomRepository roomRepo, IItemRepository itemRe
 
         var planner = new RoomPlanner(roomData.Height, roomData.Width);
 
-        return items.Select(item => planner.TryPlaceFurniture(item)).OfType<Coordinates>().ToList();
-    }
+        var coordinates = new List<Coordinates>();
+
+        foreach (var item in items)
+        {
+            var position = planner.TryPlaceFurniture(item);
+            if (position != null)
+            {
+                coordinates.Add(position);
+            }
+        }
+
+        return coordinates;
+    }    
 }
