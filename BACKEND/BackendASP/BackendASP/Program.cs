@@ -5,6 +5,16 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddCors(opt => {
+    opt.AddPolicy("DevCors", policy => {
+        policy
+            .WithOrigins("http://localhost:3000", "http://127.0.0.1:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration["ConnectionString:RoomDb"]);
@@ -18,12 +28,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
+
+app.UseRouting();
+
 // enableing CORS
-app.UseCors(x => x
-    .AllowCredentials()
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .WithOrigins("http://localhost:5500", "http://127.0.0.1:5500")); // client side port
+app.UseCors("DevCors");
 
 // Swagger
 if (app.Environment.IsDevelopment())
@@ -32,8 +46,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthorization();
+app.MapControllers();
+
 // Setting up default route
-app.UseRouting();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}"

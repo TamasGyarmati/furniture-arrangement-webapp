@@ -3,6 +3,7 @@
 
 # Custom
 .vs
+.env
 
 # User-specific files
 *.suo

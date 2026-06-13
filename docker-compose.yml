@@ -1,0 +1,47 @@
+services:
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  backend:
+    build:
+      context: ./BACKEND/BackendASP
+
+    container_name: backendasp
+
+    ports:
+      - "5090:8080"
+
+    depends_on:
+      - db
+
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+
+      ConnectionString__RoomDb: Server=sqlserver;Database=${DB_NAME};User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True;
+
+  frontend:
+    build:
+      context: ./FRONTEND
+
+    container_name: frontendapp
+
+    ports:
+      - "3000:80"
+
+    depends_on:
+      - backend
+
+volumes:
+  sql_data:
